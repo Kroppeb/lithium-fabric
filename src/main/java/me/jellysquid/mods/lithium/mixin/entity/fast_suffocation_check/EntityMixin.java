@@ -2,6 +2,7 @@ package me.jellysquid.mods.lithium.mixin.entity.fast_suffocation_check;
 
 import me.jellysquid.mods.lithium.common.entity.movement.BlockCollisionPredicate;
 import me.jellysquid.mods.lithium.common.entity.movement.ChunkAwareBlockCollisionSweeper;
+import me.jellysquid.mods.lithium.common.util.streams.EmptyStream;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
@@ -17,6 +18,9 @@ import java.util.stream.Stream;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
+    @SuppressWarnings("unchecked")
+    private static final Stream<VoxelShape> EMPTY_VOXELSHAPE_STREAM = (Stream<VoxelShape>) EmptyStream.INSTANCE;
+
     /**
      * @author JellySquid
      * @reason Use optimized block volume iteration, avoid streams
@@ -31,6 +35,6 @@ public abstract class EntityMixin {
             return Stream.of(shape);
         }
 
-        return Stream.empty();
+        return EMPTY_VOXELSHAPE_STREAM;
     }
 }

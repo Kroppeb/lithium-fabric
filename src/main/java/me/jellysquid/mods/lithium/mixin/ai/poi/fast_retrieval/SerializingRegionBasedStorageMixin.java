@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import me.jellysquid.mods.lithium.common.util.Collector;
+import me.jellysquid.mods.lithium.common.util.streams.EmptyStream;
 import me.jellysquid.mods.lithium.common.util.collections.ListeningLong2ObjectOpenHashMap;
 import me.jellysquid.mods.lithium.common.world.interests.RegionBasedStorageSectionAccess;
 import net.minecraft.datafixer.DataFixTypes;
@@ -29,6 +30,9 @@ import java.util.stream.Stream;
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType") // We don't get a choice, this is Minecraft's doing!
 @Mixin(SerializingRegionBasedStorage.class)
 public abstract class SerializingRegionBasedStorageMixin<R> implements RegionBasedStorageSectionAccess<R> {
+    @SuppressWarnings("unchecked")
+    private final Stream<R> emptyStream = (Stream<R>) EmptyStream.INSTANCE;
+
     @Mutable
     @Shadow
     @Final
@@ -81,7 +85,7 @@ public abstract class SerializingRegionBasedStorageMixin<R> implements RegionBas
 
         // No items are present in this column
         if (flags.isEmpty()) {
-            return Stream.empty();
+            return this.emptyStream;
         }
 
         return flags.stream()

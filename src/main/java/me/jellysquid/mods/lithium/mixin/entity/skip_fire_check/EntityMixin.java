@@ -1,5 +1,6 @@
 package me.jellysquid.mods.lithium.mixin.entity.skip_fire_check;
 
+import me.jellysquid.mods.lithium.common.util.streams.EmptyStream;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Box;
@@ -13,6 +14,9 @@ import java.util.stream.Stream;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
+    @SuppressWarnings("unchecked")
+    private static final Stream<BlockState> EMPTY_BLOCKSTATE_STREAM = (Stream<BlockState>) EmptyStream.INSTANCE;
+
     @Shadow
     private int fireTicks;
 
@@ -23,7 +27,7 @@ public abstract class EntityMixin {
     private Stream<BlockState> skipFireTestIfResultDoesNotMatter(World world, Box box) {
         // Skip scanning the blocks around the entity touches by returning an empty stream when the result does not matter
         if (this.fireTicks > 0 || this.fireTicks == -this.getBurningDuration()) {
-            return Stream.empty();
+            return EMPTY_BLOCKSTATE_STREAM;
         }
 
         return world.method_29556(box);

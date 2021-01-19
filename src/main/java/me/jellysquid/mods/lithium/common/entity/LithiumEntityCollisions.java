@@ -2,6 +2,7 @@ package me.jellysquid.mods.lithium.common.entity;
 
 import me.jellysquid.mods.lithium.common.entity.movement.BlockCollisionPredicate;
 import me.jellysquid.mods.lithium.common.entity.movement.ChunkAwareBlockCollisionSweeper;
+import me.jellysquid.mods.lithium.common.util.streams.EmptyStream;
 import me.jellysquid.mods.lithium.common.util.Producer;
 import me.jellysquid.mods.lithium.common.world.WorldHelper;
 import net.minecraft.entity.Entity;
@@ -22,6 +23,8 @@ import java.util.stream.StreamSupport;
 
 public class LithiumEntityCollisions {
     public static final double EPSILON = 1.0E-7D;
+    @SuppressWarnings("unchecked")
+    public static final Stream<VoxelShape> EMPTY_VOXELSHAPE_STREAM = (Stream<VoxelShape>) EmptyStream.INSTANCE;
 
     /**
      * [VanillaCopy] CollisionView#getBlockCollisions(Entity, Box)
@@ -34,7 +37,7 @@ public class LithiumEntityCollisions {
      */
     public static Stream<VoxelShape> getBlockCollisions(CollisionView world, Entity entity, Box box, BlockCollisionPredicate predicate) {
         if (isBoxEmpty(box)) {
-            return Stream.empty();
+            return EMPTY_VOXELSHAPE_STREAM;
         }
 
         final ChunkAwareBlockCollisionSweeper sweeper = new ChunkAwareBlockCollisionSweeper(world, entity, box, predicate);
@@ -89,7 +92,7 @@ public class LithiumEntityCollisions {
      */
     public static Stream<VoxelShape> getEntityCollisions(EntityView view, Entity entity, Box box, Predicate<Entity> predicate) {
         if (isBoxEmpty(box)) {
-            return Stream.empty();
+            return EMPTY_VOXELSHAPE_STREAM;
         }
 
         return Producer.asStream(getEntityCollisionProducer(view, entity, box.expand(EPSILON), predicate));
