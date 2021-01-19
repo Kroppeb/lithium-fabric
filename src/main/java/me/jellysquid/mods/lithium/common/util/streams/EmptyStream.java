@@ -4,11 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.*;
-import java.util.stream.Collector;
-import java.util.stream.DoubleStream;
-import java.util.stream.IntStream;
-import java.util.stream.LongStream;
-import java.util.stream.Stream;
+import java.util.stream.*;
 
 public class EmptyStream<T> implements Stream<T> {
     public static final EmptyStream<?> INSTANCE = new EmptyStream<>();
@@ -118,8 +114,7 @@ public class EmptyStream<T> implements Stream<T> {
     @NotNull
     @Override
     public <A> A[] toArray(IntFunction<A[]> intFunction) {
-        Stream<A> stream = Stream.empty();
-        return stream.toArray(intFunction);
+        return intFunction.apply(0);
     }
 
     @Override
@@ -145,8 +140,7 @@ public class EmptyStream<T> implements Stream<T> {
 
     @Override
     public <R, A> R collect(Collector<? super T, A, R> collector) {
-        Stream<T> stream = Stream.empty();
-        return stream.collect(collector);
+        return collector.finisher().apply(collector.supplier().get());
     }
 
     @NotNull

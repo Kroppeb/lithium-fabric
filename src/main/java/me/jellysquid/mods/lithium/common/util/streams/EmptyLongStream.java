@@ -5,14 +5,26 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.function.*;
 import java.util.stream.DoubleStream;
-import java.util.stream.LongStream;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 public class EmptyLongStream implements LongStream {
     public static final LongStream INSTANCE = new EmptyLongStream();
+    private static final PrimitiveIterator.OfLong EMPTY_ITERATOR = new PrimitiveIterator.OfLong() {
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
 
-    private EmptyLongStream() {}
+        @Override
+        public long nextLong() {
+            throw new NoSuchElementException();
+        }
+    };
+
+    private EmptyLongStream() {
+    }
 
     @Override
     public LongStream filter(LongPredicate longPredicate) {
@@ -127,7 +139,7 @@ public class EmptyLongStream implements LongStream {
 
     @Override
     public LongSummaryStatistics summaryStatistics() {
-        return LongStream.empty().summaryStatistics();
+        return new LongSummaryStatistics();
     }
 
     @Override
@@ -195,7 +207,7 @@ public class EmptyLongStream implements LongStream {
 
     @Override
     public PrimitiveIterator.@NotNull OfLong iterator() {
-        return LongStream.empty().iterator();
+        return EMPTY_ITERATOR;
     }
 
     @Override

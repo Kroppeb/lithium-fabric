@@ -4,15 +4,27 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.*;
-import java.util.stream.LongStream;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 public class EmptyDoubleStream implements DoubleStream {
     public static final DoubleStream INSTANCE = new EmptyDoubleStream();
+    private static final PrimitiveIterator.OfDouble EMPTY_ITERATOR = new PrimitiveIterator.OfDouble() {
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
 
-    private EmptyDoubleStream() {}
+        @Override
+        public double nextDouble() {
+            throw new NoSuchElementException();
+        }
+    };
+
+    private EmptyDoubleStream() {
+    }
 
     @Override
     public DoubleStream filter(DoublePredicate doublePredicate) {
@@ -127,7 +139,7 @@ public class EmptyDoubleStream implements DoubleStream {
 
     @Override
     public DoubleSummaryStatistics summaryStatistics() {
-        return DoubleStream.empty().summaryStatistics();
+        return new DoubleSummaryStatistics();
     }
 
     @Override
@@ -190,7 +202,7 @@ public class EmptyDoubleStream implements DoubleStream {
 
     @Override
     public PrimitiveIterator.@NotNull OfDouble iterator() {
-        return DoubleStream.empty().iterator();
+        return EMPTY_ITERATOR;
     }
 
     @Override

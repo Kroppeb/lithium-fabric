@@ -11,8 +11,20 @@ import java.util.stream.Stream;
 
 public class EmptyIntStream implements IntStream {
     public static final IntStream INSTANCE = new EmptyIntStream();
+    private static final PrimitiveIterator.OfInt EMPTY_ITERATOR = new PrimitiveIterator.OfInt() {
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
 
-    private EmptyIntStream() {}
+        @Override
+        public int nextInt() {
+            throw new NoSuchElementException();
+        }
+    };
+
+    private EmptyIntStream() {
+    }
 
     @Override
     public IntStream filter(IntPredicate intPredicate) {
@@ -127,7 +139,7 @@ public class EmptyIntStream implements IntStream {
 
     @Override
     public IntSummaryStatistics summaryStatistics() {
-        return IntStream.empty().summaryStatistics();
+        return new IntSummaryStatistics();
     }
 
     @Override
@@ -200,7 +212,7 @@ public class EmptyIntStream implements IntStream {
 
     @Override
     public PrimitiveIterator.@NotNull OfInt iterator() {
-        return IntStream.empty().iterator();
+        return EMPTY_ITERATOR;
     }
 
     @Override
